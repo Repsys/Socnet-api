@@ -20,6 +20,8 @@ services:
         depends_on:
             - composer
             - postgres
+        links:
+            - postgres
 
     composer:
         image: composer:2.1.9
@@ -31,6 +33,8 @@ services:
     postgres:
         image: postgres:12.7
         restart: always
+        volumes:
+            - ./.database:/var/lib/postgresql/data
         environment:
             POSTGRES_DB: socnet
             POSTGRES_USER: postgres
