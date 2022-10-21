@@ -13,15 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('post_reactions', function (Blueprint $table) {
+        Schema::create('photo_albums', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('post_id')
-                ->references('id')->on('posts')
-                ->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('user_id')
                 ->references('id')->on('users')
                 ->cascadeOnUpdate()->cascadeOnDelete();
             $table->unsignedSmallInteger('type');
+            $table->string('name', 128)->nullable();
             $table->timestamps();
         });
     }
@@ -33,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('post_reactions');
+        Schema::dropIfExists('photo_albums');
     }
 };

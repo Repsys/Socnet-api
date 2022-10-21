@@ -13,17 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user_profiles', function (Blueprint $table) {
+        Schema::create('photos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('album_id')
+                ->references('id')->on('photo_albums')
+                ->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('user_id')
                 ->references('id')->on('users')
                 ->cascadeOnUpdate()->cascadeOnDelete();
-            $table->string('status_text', 128)->nullable();
-            $table->date('birthday')->nullable();
-            $table->unsignedSmallInteger('gender')->nullable();
-            $table->unsignedSmallInteger('relationship')->nullable();
-            $table->string('country', 32)->nullable();
-            $table->string('city', 64)->nullable();
+            $table->unsignedSmallInteger('type');
+            $table->string('image', 128);
+            $table->boolean('is_hide')->default(false);
             $table->timestamps();
         });
     }
@@ -35,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_profiles');
+        Schema::dropIfExists('photos');
     }
 };

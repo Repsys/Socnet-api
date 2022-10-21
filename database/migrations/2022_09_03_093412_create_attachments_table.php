@@ -13,15 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('attachments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('avatar_id')->unique()->nullable();
-            $table->string('login', 32)->unique();
-            $table->string('password', 64);
-            $table->string('email', 256)->unique();
-            $table->string('name', 32);
-            $table->string('surname', 32);
-            $table->string('patronymic', 32)->nullable();
+            $table->foreignId('attachable_id');
+            $table->string('attachable_type');
+            $table->foreignId('user_id')
+                ->references('id')->on('users')
+                ->cascadeOnUpdate()->cascadeOnDelete();
+            $table->unsignedSmallInteger('type');
+            $table->jsonb('data');
             $table->timestamps();
         });
     }
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('attachments');
     }
 };
