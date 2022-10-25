@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('user_profiles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
+            $table->foreignId('user_id')->unique()
                 ->references('id')->on('users')
                 ->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('status_text', 128)->nullable();
