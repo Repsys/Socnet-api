@@ -70,13 +70,13 @@ class RouteServiceProvider extends ServiceProvider
         if (empty($file))
             throw new Exception('Error: filename must not be empty.');
 
-        $resultPath = $path . '/' . $file;
+        $filePath = $path . '/' . $file;
         $dirs = explode("/", $path);
-        $prefix = is_null($prefix) ? (end($dirs) == $file ? $path : $resultPath) : $prefix;
+        $prefix = is_null($prefix) ? (end($dirs) == $file ? $path : $filePath) : $prefix;
 
         Route::prefix($prefix)
             ->middleware($middleware)
-            ->group(base_path("routes/$resultPath.php"));
+            ->group(base_path("routes/$filePath.php"));
     }
 
 

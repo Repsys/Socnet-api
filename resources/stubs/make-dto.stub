@@ -1,0 +1,10 @@
+<?php
+
+namespace DummyNamespace;
+
+use App\DTO\Base\BaseDataTransferObject;
+
+class DummyClass extends BaseDataTransferObject
+{
+
+}
