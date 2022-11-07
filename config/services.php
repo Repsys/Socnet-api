@@ -14,6 +14,14 @@ return [
     |
     */
 
+    'rest_countries' => [
+        'domain' => env('REST_COUNTRIES_DOMAIN')
+    ],
+
+    'countries_now' => [
+        'domain' => env('COUNTRIES_NOW_DOMAIN')
+    ],
+
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),
