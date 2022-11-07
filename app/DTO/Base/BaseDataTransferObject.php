@@ -2,14 +2,13 @@
 
 namespace App\DTO\Base;
 
-use App\Exceptions\InternalErrorException;
+use App\Exceptions\ApplicationErrorException;
 use Exception;
 use Illuminate\Http\Request;
 use Spatie\DataTransferObject\DataTransferObject;
 
 class BaseDataTransferObject extends DataTransferObject
 {
-
     /**
      * Заполненные пользователем в конструкторе поля
      * @var array|int[]|string[]
@@ -18,18 +17,18 @@ class BaseDataTransferObject extends DataTransferObject
 
     public function __construct(...$args)
     {
-        if (($args[0] ?? null) instanceof Request) {
-            /** @var Request $request */
-            $request = $args[0];
-            $props = $request->all();
-            $this->filledProps = array_keys($props);
-        } elseif (is_array($args[0] ?? null)) {
-            $props = $args[0];
-            $this->filledProps = array_keys($props);
-        } else {
-            $props = $args;
-            $this->filledProps = array_keys($args);
+        if (isset($args[0])) {
+            if ($args[0] instanceof Request) {
+                $props = $args[0]->all();
+            } elseif (is_array($args[0])) {
+                $props = $args[0];
+            }
         }
+
+        if (!isset($props))
+            $props = $args;
+
+        $this->filledProps = array_keys($props);
 
         parent::__construct(...$props);
     }
@@ -42,14 +41,14 @@ class BaseDataTransferObject extends DataTransferObject
     }
 
     /**
-     * @throws InternalErrorException
+     * @throws ApplicationErrorException
      */
     public function set(string $key, $value): void
     {
         try {
             $this->$key;
         } catch (Exception $e) {
-            throw new InternalErrorException('Invalid field name!');
+            throw new ApplicationErrorException('Invalid field name!');
         }
 
         $this->$key = $value;

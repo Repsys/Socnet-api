@@ -2,7 +2,7 @@
 
 namespace App\Helpers\Common;
 
-use App\Exceptions\InternalErrorException;
+use App\Exceptions\ApplicationErrorException;
 use Illuminate\Console\Concerns\InteractsWithIO;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
@@ -32,13 +32,13 @@ trait ConsolePrinter
     }
 
     /**
-     * @throws InternalErrorException
+     * @throws ApplicationErrorException
      */
     public function printTitle(string $title): void
     {
         $titleLength = strlen($title);
         if ($titleLength > $this->placeholderLength - 2) {
-            throw new InternalErrorException('Title is longer than placeholder.');
+            throw new ApplicationErrorException('Title is longer than placeholder.');
         }
 
         $this->createOutput();

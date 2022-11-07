@@ -74,9 +74,10 @@ class RouteServiceProvider extends ServiceProvider
         $dirs = explode("/", $path);
         $prefix = is_null($prefix) ? (end($dirs) == $file ? $path : $filePath) : $prefix;
 
-        Route::prefix($prefix)
-            ->middleware($middleware)
-            ->group(base_path("routes/$filePath.php"));
+        $route = Route::prefix($prefix);
+        if (!empty($middleware))
+            $route->middleware($middleware);
+        $route->group(base_path("routes/$filePath.php"));
     }
 
 
