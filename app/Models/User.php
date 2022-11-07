@@ -3,10 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Casts\AliasValue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
@@ -17,6 +20,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string $login
  * @property string $password
  * @property string $email
+ * @property mixed|null $account_status
  * @property string $name
  * @property string $surname
  * @property string|null $patronymic
@@ -40,12 +44,11 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property-read int|null $subscribers_count
  * @property-read \Illuminate\Database\Eloquent\Collection|User[] $subscriptions
  * @property-read int|null $subscriptions_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
- * @property-read int|null $tokens_count
  * @method static \Database\Factories\UserFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User query()
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereAccountStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereAvatarId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
@@ -60,34 +63,46 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  */
 class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
+    const ACCOUNT_STATUS_UNCONFIRMED = 0;
+    const ACCOUNT_STATUS_ACTIVE = 1;
+    const ACCOUNT_STATUS_DELETED = 2;
+
+    const ACCOUNT_STATUSES = [
+        self::ACCOUNT_STATUS_UNCONFIRMED => 'unconfirmed',
+        self::ACCOUNT_STATUS_ACTIVE => 'active',
+        self::ACCOUNT_STATUS_DELETED => 'deleted'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
+    protected $fillable = [
+        'login',
+        'email',
+        'password',
+        'name',
+        'surname',
+        'patronymic'
+    ];
+
     protected $hidden = [
         'password',
     ];
+
+    protected $casts = [
+        'account_status' => AliasValue::class,
+    ];
+
+    public function setPasswordAttribute(string $value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
      * @return mixed
      */
-    public function getJWTIdentifier()
+    public function getJWTIdentifier(): mixed
     {
         return $this->getKey();
     }
@@ -97,58 +112,58 @@ class User extends Authenticatable implements JWTSubject
      *
      * @return array
      */
-    public function getJWTCustomClaims()
+    public function getJWTCustomClaims(): array
     {
         return [];
     }
 
-    public function profile(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function profile(): HasOne
     {
         return $this->hasOne(UserProfile::class);
     }
 
-    public function avatar(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function avatar(): HasOne
     {
         return $this->hasOne(Photo::class, 'avatar_id');
     }
 
-    public function subscriptions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function subscriptions(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_subscriptions', 'user_id', 'target_user_id')->withTimestamps();
     }
 
-    public function subscribers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function subscribers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_subscriptions', 'target_user_id', 'user_id')->withTimestamps();
     }
 
-    public function notifications(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function notifications(): HasMany
     {
         return $this->hasMany(Notification::class);
     }
 
-    public function posts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
     }
 
-    public function photoAlbums(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function photoAlbums(): HasMany
     {
         return $this->hasMany(PhotoAlbum::class);
     }
 
-    public function photos(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function photos(): HasMany
     {
         return $this->hasMany(Photo::class);
     }
 
-    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function comments(): HasMany
     {
-        return $this->hasMany(Comment::class); // TODO сделать чтобы получать комменты отдельно для разных сущностей
+        return $this->hasMany(Comment::class); // TODO сделать чтобы получать комменты отдельно для разных сущностей хотя мб бесмысленно
     }
 
-    public function reactions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function reactions(): HasMany
     {
-        return $this->hasMany(Reaction::class); // TODO сделать чтобы получать реакции отдельно для разных сущностей
+        return $this->hasMany(Reaction::class); // TODO сделать чтобы получать реакции отдельно для разных сущностей хотя мб бесмысленно
     }
 }

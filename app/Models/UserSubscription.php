@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\Models\UserSubscription
@@ -29,12 +30,12 @@ class UserSubscription extends Model
 {
     use HasFactory;
 
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function targetUser(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function targetUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'target_user_id');
     }

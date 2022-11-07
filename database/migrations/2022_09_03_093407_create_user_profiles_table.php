@@ -22,8 +22,6 @@ return new class extends Migration
             $table->date('birthday')->nullable();
             $table->unsignedSmallInteger('gender')->nullable();
             $table->unsignedSmallInteger('relationship')->nullable();
-            $table->string('country', 32)->nullable();
-            $table->string('city', 64)->nullable();
             $table->timestamps();
         });
     }
