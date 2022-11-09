@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('user_profiles', function (Blueprint $table) {
-            $table->foreignId('country_id');
-            $table->foreignId('city_id');
+            $table->foreignId('country_id')->nullable();
+            $table->foreignId('city_id')->nullable();
         });
     }
 

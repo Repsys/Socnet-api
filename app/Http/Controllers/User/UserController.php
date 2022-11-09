@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\DTO\CountryAndCityData;
 use App\DTO\User\CreateUserData;
 use App\DTO\User\Profile\UpdateUserProfileData;
 use App\DTO\User\UpdateUserData;
@@ -33,7 +34,7 @@ class UserController extends Controller
 
     public function getUser(User $user): JsonResponse
     {
-        $response = $user->with('profile')->get();
+        $response = $this->userService->getUser($user);
         return JResponse::success($response);
     }
 
@@ -45,7 +46,7 @@ class UserController extends Controller
 
     public function getMe(): JsonResponse
     {
-        $response = Auth::user()->with('profile')->get();
+        $response = $this->userService->getUser(Auth::user());
         return JResponse::success($response);
     }
 
@@ -58,8 +59,9 @@ class UserController extends Controller
 
     public function updateMyProfile(UpdateUserProfileRequest $request): JsonResponse
     {
-        $data = new UpdateUserProfileData($request->validated());
-        $this->userService->updateUserProfile(Auth::user(), $data);
+        $profileData = new UpdateUserProfileData($request->validated());
+        $countryData = new CountryAndCityData($request->validated());
+        $this->userService->updateUserProfile(Auth::user(), $profileData, $countryData);
         return JResponse::success();
     }
 }

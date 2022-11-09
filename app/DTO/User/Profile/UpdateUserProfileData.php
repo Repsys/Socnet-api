@@ -10,6 +10,4 @@ class UpdateUserProfileData extends BaseDataTransferObject
     public ?string $birthday;
     public ?string $gender;
     public ?string $relationship;
-    public ?string $country;
-    public ?string $city;
 }

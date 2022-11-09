@@ -28,6 +28,7 @@ class RouteServiceProvider extends ServiceProvider
         return [
             ['file' => 'web', 'prefix' => '', 'middleware' => 'web'],
 
+            ['path' => 'api', 'middleware' => 'api'],
             ['path' => 'api/auth', 'middleware' => 'api'],
             ['path' => 'api/users', 'middleware' => 'api'],
 

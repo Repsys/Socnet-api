@@ -25,7 +25,7 @@ class CountrySeeder extends Seeder
     {
         Country::truncate();
 
-        $countries = $this->countriesService->getCountriesWithCitiesData();
+        $countries = $this->countriesService->getCountries();
         foreach ($countries as $countryInfo) {
             $countryName = $countryInfo['country'];
             $country = Country::firstOrCreate(['name' => $countryName], Arr::only($countryInfo, ['iso2', 'iso3']));

@@ -9,7 +9,7 @@ class RestCountriesApiService extends ExternalJsonApiService
         return config('services.rest_countries.domain');
     }
 
-    public function getCountriesWithCitiesData(): array
+    public function getCountries(): array
     {
         $action = '/all';
         $params = [

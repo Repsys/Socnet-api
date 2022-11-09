@@ -18,9 +18,9 @@ class BusinessErrorException extends Exception
     public function __construct(string $message = '', array $errors = [], int $code = Response::HTTP_BAD_REQUEST)
     {
         if ($code < 400 || $code > 499)
-            throw new ApplicationErrorException('Invalid 4XX status', Response::HTTP_INTERNAL_SERVER_ERROR);
+            throw new ApplicationErrorException('Invalid 4XX status');
         $this->errors = $errors;
-        parent::__construct($message, $errors, $code);
+        parent::__construct($message, $code);
     }
 
     public function getErrors(): array

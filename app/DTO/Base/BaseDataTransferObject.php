@@ -10,7 +10,7 @@ use Spatie\DataTransferObject\DataTransferObject;
 class BaseDataTransferObject extends DataTransferObject
 {
     /**
-     * Заполненные пользователем в конструкторе поля
+     * Заполненные пользователем поля
      * @var array|int[]|string[]
      */
     private array $filledProps = [];
@@ -33,11 +33,16 @@ class BaseDataTransferObject extends DataTransferObject
         parent::__construct(...$props);
     }
 
-    public function onlyFilled(array $expect = []): array
+    public function onlyFilled(): array
     {
-        return array_filter($this->all(), function ($val, $key) use ($expect) {
-            return in_array($key, $expect) || in_array($key, $this->filledProps);
+        return array_filter($this->all(), function ($val, $key) {
+            return in_array($key, $this->filledProps);
         }, ARRAY_FILTER_USE_BOTH);
+    }
+
+    public function isFilled(string $key): bool
+    {
+        return in_array($key, $this->filledProps);
     }
 
     /**
@@ -52,9 +57,8 @@ class BaseDataTransferObject extends DataTransferObject
         }
 
         $this->$key = $value;
-        if (!in_array($key, $this->filledProps)) {
+        if (!$this->isFilled($key)) {
             $this->filledProps[] = $key;
         }
-
     }
 }

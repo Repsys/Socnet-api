@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Casts\AliasValue;
+use App\DTO\CountryAndCityData;
+use App\Exceptions\ValidationErrorException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -68,15 +70,15 @@ class UserProfile extends Model
         'status_text',
         'birthday',
         'gender',
-        'relationship',
-        'country',
-        'city'
+        'relationship'
     ];
 
     protected $hidden = [
         'id',
         'user_id',
-        'created_at'
+        'created_at',
+        'country_id',
+        'city_id'
     ];
 
     protected $casts = [
@@ -84,14 +86,10 @@ class UserProfile extends Model
         'relationship' => AliasValue::class,
     ];
 
-//    protected $appends = [
-//        'relationship_raw'
-//    ];
-//
-//    public function getRelationshipRawAttribute(): ?int
-//    {
-//        return $this->attributes['relationship'];
-//    }
+    protected $with = [
+        'country:id,name',
+        'city:id,name',
+    ];
 
     public function user(): BelongsTo
     {
@@ -106,5 +104,30 @@ class UserProfile extends Model
     public function city(): BelongsTo
     {
         return $this->belongsTo(City::class);
+    }
+
+    public function updateCountryAndCity(CountryAndCityData $data)
+    {
+        if ($data->isFilled('country_id')) {
+            $this->country_id = $data->country_id;
+
+            if (is_null($this->country_id) || (!is_null($this->city_id) && $this->city->country_id != $this->country_id))
+                $this->city_id = null;
+        }
+
+        if ($data->isFilled('city_id')) {
+            if (!is_null($data->city_id)) {
+                $city = City::findOrFail($data->city_id);
+
+                if (is_null($this->country_id))
+                    throw new ValidationErrorException(['city_id' => 'The city cannot be set while the country is empty.']);
+                if ($city->country_id != $this->country_id) {
+                    throw new ValidationErrorException(['city_id' => 'The city does not belong to the country.']);
+                }
+            }
+            $this->city_id = $data->city_id;
+        }
+
+        $this->save();
     }
 }

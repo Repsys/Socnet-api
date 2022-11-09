@@ -28,15 +28,15 @@ class UpdateUserProfileRequest extends FormRequest
                 'nullable',
                 Rule::in(UserProfile::RELATIONSHIPS)
             ],
-            'country' => [
+            'country_id' => [
                 'nullable',
-                'string',
-                'max:32'
+                'integer',
+                'exists:countries,id'
             ],
-            'city' => [
+            'city_id' => [
                 'nullable',
-                'string',
-                'max:64'
+                'integer',
+                'exists:cities,id'
             ]
         ];
     }

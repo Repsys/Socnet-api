@@ -32,6 +32,10 @@ class City extends Model
         'name'
     ];
 
+    protected $hidden = [
+        'country_id',
+    ];
+
     public $timestamps = false;
 
     public function country(): BelongsTo

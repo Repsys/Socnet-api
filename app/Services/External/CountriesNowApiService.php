@@ -14,7 +14,7 @@ class CountriesNowApiService extends ExternalJsonApiService
         return $response['data'];
     }
 
-    public function getCountriesWithCitiesData(): array
+    public function getCountries(): array
     {
         $action = '/countries';
         $response = $this->sendGet($action);
