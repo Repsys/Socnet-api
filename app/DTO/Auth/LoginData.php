@@ -12,11 +12,11 @@ class LoginData extends BaseDataTransferObject
 
     public function getCredentials(): array
     {
-        $validator = Validator::make(['email' => $this->login], [
+        $emailValidator = Validator::make(['email' => $this->login], [
             'email' => 'required|email'
         ]);
 
-        $loginFieldName = $validator->passes() ? 'email' : 'login';
+        $loginFieldName = $emailValidator->passes() ? 'email' : 'login';
 
        return [
            $loginFieldName => $this->login,
