@@ -9,11 +9,11 @@ use Illuminate\Support\Arr;
 
 class CountrySeeder extends Seeder
 {
-    public CountriesNowApiService $countriesService;
+    public CountriesNowApiService $countriesNowApiService;
 
-    public function __construct(CountriesNowApiService $countriesService)
+    public function __construct(CountriesNowApiService $countriesNowApiService)
     {
-        $this->countriesService = $countriesService;
+        $this->countriesNowApiService = $countriesNowApiService;
     }
 
     /**
@@ -25,7 +25,7 @@ class CountrySeeder extends Seeder
     {
         Country::truncate();
 
-        $countries = $this->countriesService->getCountries();
+        $countries = $this->countriesNowApiService->getCountries();
         foreach ($countries as $countryInfo) {
             $countryName = $countryInfo['country'];
             $country = Country::firstOrCreate(['name' => $countryName], Arr::only($countryInfo, ['iso2', 'iso3']));

@@ -16,10 +16,8 @@ class UserService
     public function createUser(CreateUserData $data): User
     {
         DB::beginTransaction();
-
         $user = User::create($data->all());
         $user->profile()->create();
-
         DB::commit();
 
         // TODO Подтверждение почты (и смена пароля мб так же):

@@ -18,7 +18,8 @@ class UpdateUserProfileRequest extends FormRequest
             ],
             'birthday' => [
                 'nullable',
-                'date_format:Y-m-d'
+                'date_format:Y-m-d',
+                'before_or_equal:today'
             ],
             'gender' => [
                 'nullable',

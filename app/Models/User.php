@@ -65,14 +65,14 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
 
-    const ACCOUNT_STATUS_UNCONFIRMED = 0;
-    const ACCOUNT_STATUS_ACTIVE = 1;
-    const ACCOUNT_STATUS_DELETED = 2;
+    const ACCOUNT_STATUS_UNCONFIRMED = 'unconfirmed';
+    const ACCOUNT_STATUS_ACTIVE = 'active';
+    const ACCOUNT_STATUS_DELETED = 'deleted';
 
     const ACCOUNT_STATUSES = [
-        self::ACCOUNT_STATUS_UNCONFIRMED => 'unconfirmed',
-        self::ACCOUNT_STATUS_ACTIVE => 'active',
-        self::ACCOUNT_STATUS_DELETED => 'deleted'
+        0 => self::ACCOUNT_STATUS_UNCONFIRMED,
+        1 => self::ACCOUNT_STATUS_ACTIVE,
+        2 => self::ACCOUNT_STATUS_DELETED,
     ];
 
     protected $fillable = [

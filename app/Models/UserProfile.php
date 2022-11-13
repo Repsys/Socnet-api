@@ -44,26 +44,26 @@ class UserProfile extends Model
 {
     use HasFactory;
 
-    const GENDER_MALE = 0;
-    const GENDER_FEMALE = 1;
+    const GENDER_MALE = 'male';
+    const GENDER_FEMALE = 'female';
 
     const GENDERS = [
-        self::GENDER_MALE => 'male',
-        self::GENDER_FEMALE => 'female'
+        0 => self::GENDER_MALE,
+        1 => self::GENDER_FEMALE,
     ];
 
-    const RELATIONSHIP_SINGLE = 0;
-    const RELATIONSHIP_IN_RELATIONSHIP = 1;
-    const RELATIONSHIP_MARRIED = 2;
-    const RELATIONSHIP_IN_LOVE = 3;
-    const RELATIONSHIP_IN_SEARCH = 4;
+    const RELATIONSHIP_SINGLE = 'single';
+    const RELATIONSHIP_IN_RELATIONSHIP = 'in_relationship';
+    const RELATIONSHIP_MARRIED = 'married';
+    const RELATIONSHIP_IN_LOVE = 'in_love';
+    const RELATIONSHIP_IN_SEARCH = 'in_search';
 
     const RELATIONSHIPS = [
-        self::RELATIONSHIP_SINGLE => 'single',
-        self::RELATIONSHIP_IN_RELATIONSHIP => 'in_relationship',
-        self::RELATIONSHIP_MARRIED => 'married',
-        self::RELATIONSHIP_IN_LOVE => 'in_love',
-        self::RELATIONSHIP_IN_SEARCH => 'in_search',
+        0 => self::RELATIONSHIP_SINGLE,
+        1 => self::RELATIONSHIP_IN_RELATIONSHIP,
+        2 => self::RELATIONSHIP_MARRIED,
+        3 => self::RELATIONSHIP_IN_LOVE,
+        4 => self::RELATIONSHIP_IN_SEARCH,
     ];
 
     protected $fillable = [

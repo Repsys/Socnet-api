@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Services\User\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Paginator;
 
 class UserController extends Controller
 {
@@ -41,7 +42,7 @@ class UserController extends Controller
     public function getUsers(): JsonResponse
     {
         $response = $this->userService->getUsers();
-        return JResponse::success($response);
+        return JResponse::success(Paginator::assignParams($response));
     }
 
     public function getMe(): JsonResponse
